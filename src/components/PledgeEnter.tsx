@@ -71,10 +71,14 @@ function PledgeEnter({ setTotalBackers, minPledge, setStockQuantity }: Props) {
 	const [amount, setAmount] = useState(0);
 	const [value, setValue] = useContext(AmountContext);
 	const [show, setShow] = useState(false);
+
+	function isNumberSetter(fn: any): fn is Dispatch<SetStateAction<number>> {
+		return typeof fn === 'function';
+	}
 	const handleSubmit = (amount: number) => {
 		if (value >= 100000 || amount >= 100000) return;
 		if (amount < minPledge) return;
-		if (typeof setValue === 'function') setValue(prev => prev + amount);
+		if (isNumberSetter(setValue)) setValue((prev: number) => prev + amount);
 		setStockQuantity(prev => prev - 1);
 		setAmount(0);
 		setTotalBackers(prev => prev + 1);
